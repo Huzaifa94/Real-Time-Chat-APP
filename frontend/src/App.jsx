@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Navbar from "./components/Navbar.jsx";
+import Navbar from './components/Navbar.jsx'
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
@@ -8,6 +8,7 @@ import SettingsPage from "./pages/SettingsPage";
 import { Loader } from "lucide-react";
 import ProfilePage from "./pages/ProfilePage";
 import { useAuthStore } from "./store/useAuthStore.js";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -26,9 +27,11 @@ const App = () => {
 
   return (
     <div>
+
       <Navbar />
       <Routes>
         <Route>
+          W
           <Route path="/" element={ authUser?<HomePage />: <Navigate to ="/login"/>} />
           <Route path="/signup" element={!authUser ? <SignUpPage/>: <Navigate to='/'/>} />
           <Route path="/login" element={!authUser ?<LoginPage/> : <Navigate to = '/'/>} />
@@ -36,6 +39,7 @@ const App = () => {
           <Route path="/profile" element={ <ProfilePage />} />
         </Route>
       </Routes>
+      <Toaster position="top-center" />
     </div>
   );
 };
