@@ -92,10 +92,13 @@ export const signout = (req,res) =>{
 };
 
 export const updateprofile = async (req,res) => {
+console.log(req.body);
 
     try {
         
      const { profilePic } = req.body;
+     console.log(profilePic);
+     
      const userId = req.user._id;
     if (!profilePic){
 
