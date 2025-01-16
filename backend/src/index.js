@@ -18,8 +18,8 @@ app.use(
     secure: false,
   })
 );
-app.use(bodyParser.json({ limit: '10mb' })); 
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); 
+app.use(bodyParser.json({ limit: '50mb' })); 
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messagesRoutes);
 app.listen(PORT, () => {

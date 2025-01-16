@@ -1,20 +1,17 @@
 import User from "../models/user.modal.js";
 import Messages from "../models/messages.modal.js";
-export const getUsersForSidebar = async (req,res)=>{
 
+export const getUsersForSidebar = async (req, res) => {
     try {
-        const loggedInUserId = req.user._id;
-        const filteredUsers = await User.find({__id:{$in:loggedInUserId}}).select("-password");
-
-        res.status(200).json(filteredUsers);
-
+      const loggedInUserId = req.user._id;
+      const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+  
+      res.status(200).json(filteredUsers);
     } catch (error) {
-        
-        console.error("Error in getUsersForSideBar",error);
-        res.status(500).json({error: "Server Error"});
+      console.error("Error in getUsersForSidebar: ", error.message);
+      res.status(500).json({ error: "Internal server error" });
     }
-
-};
+  };
 
 export const getMessages = async (req, res)=>{
 

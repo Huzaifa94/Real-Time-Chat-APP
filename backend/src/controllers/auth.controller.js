@@ -35,7 +35,7 @@ export const  signup = async (req,res) => {
             _id: newUser._id,
             fullName: newUser.fullName,
             email:newUser.email,
-            profilePic:newUser.profilepic
+            profilePic:newUser.profilePic
         })
     }else{
         res.status(400).json({error: 'Invalid User data'})
@@ -53,31 +53,26 @@ export const signin = async (req,res) =>{
 
     const {email, password} = req.body;
 try {
-   const user = await User.findOne({ email: email});
+   const user = await User.findOne({ email});
    
    if(!user) return res.status(400).json({message: "User Not Found"})
-    const isMatch = await bcrypt.compare(password, user.password);
-   if(!isMatch) return res.status(400).json({message: "Invalid Password"})
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
     generateToken(user._id,res)
-    res.json({
+    res.status(200).json({
         _id: user._id,
         fullName: user.fullName,
         email: user.email,
-        profilePic: user.profilepic
-    })
-    
-    
+        profilePic: user.profilePic,
+      });
     } catch (error) {
-        
-    console.error("Error in signin Controller",error.message);
-    res.status(500).json({ message: "internal error"})
-    
- 
-
-    
-}
- 
-};
+      console.log("Error in login controller", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  
 
 
 export const signout = (req,res) =>{
@@ -92,12 +87,12 @@ export const signout = (req,res) =>{
 };
 
 export const updateprofile = async (req,res) => {
-console.log(req.body);
+// console.log(req.body);
 
     try {
         
      const { profilePic } = req.body;
-     console.log(profilePic);
+    //  console.log(profilePic);
      
      const userId = req.user._id;
     if (!profilePic){
@@ -105,7 +100,11 @@ console.log(req.body);
         res.status(400).json({message: "Profile Pic is Required"})
 
     }
+    
+    
     const uploadResponse = await cloudinary.uploader.upload(profilePic)
+    
+    
     const UpdateUser = await User.findByIdAndUpdate(userId, {profilePic: uploadResponse.secure_url}, {new: true})
     res.status(200).json(UpdateUser)
         
